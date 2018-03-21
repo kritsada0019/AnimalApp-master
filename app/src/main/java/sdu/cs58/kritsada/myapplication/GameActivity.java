@@ -25,7 +25,7 @@ public class GameActivity extends AppCompatActivity {
     ArrayList<Integer> qID = new ArrayList<Integer>(); //ตัวแปรสุ่มคำถาม เป็นชนิดarray
     String answer;//เก็บคำตอบที่userตอบ
     int score = 0;//ค่าเริ่มต้นที่0<รวมคะแนน>
-
+    String getNameString;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -226,8 +226,9 @@ public class GameActivity extends AppCompatActivity {
             score++;
 
         }
-        if (qID.isEmpty()) { //ถ้าทำครบทุกข้อ qID จะเ้ป็นค่าว่าง ใฟ้แสดงคะแนนออกมา
-            dialogboxScore(); //method แสดงผลคะแนนรวม
+        if (qID.isEmpty()) { //ถ้าทำครบทุกข้อ qID จะเ้ป็นค่าว่าง ให้แสดงคะแนนออกมา
+            getNameString = getIntent().getStringExtra("Name");
+            dialogboxScore(getNameString); //method แสดงผลคะแนนรวม
         } else {
             setQuestion(qID.remove(0));// แสดงคำถามถัดไป
 
@@ -235,26 +236,26 @@ public class GameActivity extends AppCompatActivity {
 
     }//end choiceAns
 
-    private void dialogboxScore() { //method แสดงคะแนน
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void dialogboxScore(String name) { //method แสดงคะแนน
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this); //เอาclass มาใช้งาน ตือการinstant
         builder.setTitle("สรุปคะแนน");
-        builder.setMessage("ได้คะแนน " + score + " คะแนน")
-            .setCancelable(false)
-            .setPositiveButton("ออกจากเกม", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    finish(); // ปิด activity เพื่อออกจากแอพ
-                }// end onclick
-            })
-        .setNegativeButton("เล่นอีกครั้ง", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+        builder.setMessage( name +" ได้คะแนน " + score + " คะแนน")
+                .setCancelable(false)
+                .setPositiveButton("ออกจากเกม", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish(); // ปิด activity เพื่อออกจากแอพ
+                    }// end onclick
+                })
+                .setNegativeButton("เล่นอีกครั้ง", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = getIntent(); //getIntent=จำหน้าเกมไว้ finish=ปิดไป startActivity=เปิดหน้าจาก getIntent
+                        finish();
+                        startActivity(intent);
 
-            }
-        });
+                    }
+                });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
